@@ -52,7 +52,7 @@ for i = 1:bar_count
     c = bar_angle(i, 1);
     s = bar_angle(i, 2);
     K_local = (A*E/bar_length(i, 1))*[c^2 c*s -c^2 -c*s;
-                 c*s s^s -c*s -s^2;
+                 c*s s^2 -c*s -s^2;
                  -c^2 -c*s c^2 c*s;
                  -c*s -s^2 c*s s^2];
     
@@ -79,7 +79,7 @@ end
 
 for i = 1:length(force_nodes)
     j = 2*(force_nodes(i) - 1);
-    F(j, 1) = -10000000;
+    F(j, 1) = -100000;
 end
 
 % Choosing the fixed nodes

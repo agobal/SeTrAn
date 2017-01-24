@@ -80,7 +80,7 @@ end
 
 for i = 1:length(force_nodes)
     j = 3*(force_nodes(i) - 1);
-    F(j, 1) = -10000000;
+    F(j, 1) = -100000000;
 end
 
 % Choosing the fixed nodes
@@ -108,7 +108,7 @@ hold on
 for i = 1:bar_count
     l1 = linspace(x_nodes(bars(i, 1)) + u(3*bars(i, 1) - 2), x_nodes(bars(i, 2)) + u(3*bars(i, 2) - 2), 100);
     l2 = linspace(y_nodes(bars(i, 1)) + u(3*bars(i, 1) - 1), y_nodes(bars(i, 2)) + u(3*bars(i, 2) - 1), 100);
-    l3 = linspace(z_nodes(bars(i, 1)) + u(3*bars(i, 1)), y_nodes(bars(i, 2)) + u(3*bars(i, 2)), 100);
+    l3 = linspace(z_nodes(bars(i, 1)) + u(3*bars(i, 1)), z_nodes(bars(i, 2)) + u(3*bars(i, 2)), 100);
     plot3(l1, l2, l3, 'r-');
     hold on
 end
