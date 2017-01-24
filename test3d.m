@@ -10,23 +10,25 @@ clc
 %% 1. Defining node coordinates and bar arrangements
 
 % Nodal coordinates
-number_of_nodes = 8;
+number_of_nodes = 12;
 x_nodes = zeros(number_of_nodes, 1);
 y_nodes = zeros(number_of_nodes, 1);
 z_nodes = zeros(number_of_nodes, 1);
 
-x_nodes = [1; 1; 1; 1; 2; 2; 2; 2];
-y_nodes = [1; 2; 1; 2; 1; 2; 1; 2];
-z_nodes = [1; 1; 2; 2; 1; 1; 2; 2];
+x_nodes = [1; 1; 2; 2; 3; 3; 4; 4; 2; 2; 3; 3];
+y_nodes = [1; 2; 1; 2; 1; 2; 1; 2; 1; 2; 1; 2];
+z_nodes = [1; 1; 1; 1; 1; 1; 1; 1; 2; 2; 2; 2];
 
-bar_count = 18;
+bar_count = 26;
 bars = zeros(bar_count, 2);
 
-bars(1, :) = [1 2]; bars(2, :) = [1 3]; bars(3, :) = [1 4]; bars(4, :) = [1 5];
-bars(5, :) = [2 4]; bars(6, :) = [2 5]; bars(7, :) = [2 6]; bars(8, :) = [3 4];
-bars(9, :) = [3 5]; bars(10, :) = [3 7]; bars(11, :) = [4 6]; bars(12, :) = [4 7];
-bars(13, :) = [4 8]; bars(14, :) = [5 6]; bars(15, :) = [5 7]; bars(16, :) = [6 7];
-bars(17, :) = [6 8]; bars(18, :) = [7 8];
+bars(1, :) = [1 2]; bars(2, :) = [1 3]; bars(3, :) = [1 9]; bars(4, :) = [2 4];
+bars(5, :) = [2 10]; bars(6, :) = [3 4]; bars(7, :) = [3 5]; bars(8, :) = [3 9];
+bars(9, :) = [4 6]; bars(10, :) = [4 10]; bars(11, :) = [5 6]; bars(12, :) = [5 7];
+bars(13, :) = [5 9]; bars(14, :) = [5 11]; bars(15, :) = [6 8]; bars(16, :) = [6 10];
+bars(17, :) = [6 12]; bars(18, :) = [7 8]; bars(19, :) = [7 11]; bars(20, :) = [8 12];
+bars(21, :) = [9 10]; bars(22, :) = [9 11]; bars(23, :) = [10 12]; bars(24, :) = [11 12];
+bars(25, :) = [1 10]; bars(26, :) = [8 11];
 
 bar_length = zeros(bar_count, 1);
 bar_angle = zeros(bar_count, 3);
@@ -73,21 +75,21 @@ u = zeros(3*number_of_nodes, 1);
 % Choosing force nodes
 force_nodes = [];
 for i = 1:number_of_nodes
-    if x_nodes(i, 1) == 2
+    if (((x_nodes(i, 1) == 2) || (x_nodes(i, 1) == 3)) && (z_nodes(i, 1) == 1))
         force_nodes = [force_nodes i];
     end
 end
 
 for i = 1:length(force_nodes)
-    j = 3*(force_nodes(i) - 1);
-    F(j, 1) = -100000000;
+    j = 3*(force_nodes(i)) - 0;
+    F(j, 1) = -10000000;
 end
 
 % Choosing the fixed nodes
 fixed_nodes = [];
 fixed_dofs = [];
 for i = 1:number_of_nodes
-    if x_nodes(i, 1) == 1
+    if ((x_nodes(i, 1) == 1) || (x_nodes(i, 1) == 4))
         fixed_nodes = [fixed_nodes i];
         fixed_dofs = [fixed_dofs (3*i-2) (3*i-1) (3*i)];
     end
@@ -95,7 +97,7 @@ end
 free_dofs = [1:(3*number_of_nodes)];
 free_dofs(fixed_dofs) = [];
 
-u(free_dofs) = K_global(free_dofs, free_dofs)\F(free_dofs);
+u(free_dofs) = pinv(K_global(free_dofs, free_dofs))*F(free_dofs);
 
 for i = 1:bar_count
     l1 = linspace(x_nodes(bars(i, 1)), x_nodes(bars(i, 2)), 100);
